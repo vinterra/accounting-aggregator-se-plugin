@@ -20,12 +20,13 @@ public class Tests {
 
 	@Before
 	public void beforeTest(){
+		
 	}
 
 	@Test
 	public void testLaunch() throws Exception {
 		
-		
+		SecurityTokenProvider.instance.set("36501a0d-a205-4bf1-87ad-4c7185faa0d6-98187548");
 		//FOR DEBUG
 		String scopeDebug="/gcube/devNext";
 		ScopeProvider.instance.set(scopeDebug);
@@ -38,13 +39,13 @@ public class Tests {
 		inputs.put("interval",1 );
 		/* OPTIONAL INPUT */
 		//change to time
-		inputs.put("startTime", 20);
+		inputs.put("startTime", 6);
 		//specify bucket
 		
 		inputs.put("bucket","accounting_service");
 		
 		//current scope
-		inputs.put("currentScope",true);
+		inputs.put("currentScope",false);
 		//specify user for save to workspace
 		
 		//specify a recovery 0 default recovery and aggregate, 1 only aggregate, 2 only recovery

@@ -140,11 +140,9 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			}
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
+			logger.error("launch",e.getLocalizedMessage());
 			throw e;
 		}
-
-
 		Cluster cluster = CouchbaseCluster.create(ENV, url);
 	
 		//Define a type for aggregate
@@ -317,16 +315,22 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 		try {
 			//patch for field of long type  
 			String document=row.value().toString().replace("\":", "=").replace("\"", "");
-
+			
 			Map<String,? extends Serializable> map = getMapFromString(document);
-			@SuppressWarnings("rawtypes")
+			
+			@SuppressWarnings("rawtypes")			
 			AggregatedRecord record = (AggregatedRecord)RecordUtility.getRecord(map);
-
+			
 			aggregate.aggregate(record);
-			//insert an elaborate row into list JsonDocument for memory document elaborate			
+			
+			//insert an elaborate row into list JsonDocument for memory document elaborate
+			
 			String identifier=(String) row.document().content().get("id");
+			
 			JsonDocument documentJson = JsonDocument.create(identifier, row.document().content());
+			
 			documentElaborate.add(documentJson);
+			
 			return true;
 		} 
 		catch(InvalidValueException ex){
@@ -334,7 +338,8 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			return true;
 		}
 		catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
+			
+			logger.error("Error elaborateRow", e,e.getLocalizedMessage());			
 			//throw e;
 			return false;
 		}

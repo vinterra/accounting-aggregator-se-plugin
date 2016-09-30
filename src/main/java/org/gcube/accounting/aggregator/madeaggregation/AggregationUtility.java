@@ -86,10 +86,13 @@ public class AggregationUtility<T extends AggregatedRecord<T,?>> {
 	 * one provided to the Constructor. False otherwise.
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean isAggregable(T record) {
+	public boolean isAggregable(T record) {		
 		for(String field : aggregationFields){
+			
 			Serializable recordValue = record.getResourceProperty(field);
 			Serializable thisValue = t.getResourceProperty(field);
+			//logger.error("isAggregable-field:{} ,recordValue:{}, thisValue:{}",field,recordValue,thisValue);
+			
 			if(recordValue instanceof Comparable && thisValue instanceof Comparable){
 				@SuppressWarnings("rawtypes")
 				Comparable recordValueComparable = (Comparable) recordValue;
@@ -100,10 +103,17 @@ public class AggregationUtility<T extends AggregatedRecord<T,?>> {
 					return false;
 				}
 			}else{
-				if(recordValue.hashCode()!=this.hashCode()){
-					logger.trace("{} != {}", recordValue, thisValue);
+				/*
+				if (recordValue==null){
+					//logger.trace("{} != {}", recordValue, thisValue);
 					return false;
 				}
+				*/
+				if(recordValue.hashCode()!=this.hashCode()){
+					//logger.trace("{} != {}", recordValue, thisValue);
+					return false;
+				}
+				
 			}
 		}
 		return true;
