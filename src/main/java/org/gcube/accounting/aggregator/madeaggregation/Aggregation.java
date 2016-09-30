@@ -14,6 +14,7 @@ import org.gcube.documentstore.records.AggregatedRecord;
 import org.gcube.documentstore.records.Record;
 import org.gcube.documentstore.records.RecordUtility;
 import org.gcube.documentstore.records.aggregation.AggregationUtility;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ public  class Aggregation  {
 
 	//count buffer records
 	protected int totalBufferedRecords;
-	
+
 	//list Aggregate record  
 	protected Map<String, List<AggregatedRecord<?,?>>>  bufferedRecords = new HashMap<String, List<AggregatedRecord<?,?>>>();
 
@@ -65,18 +66,12 @@ public  class Aggregation  {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void madeAggregation(AggregatedRecord<?,?> record) throws InvalidValueException{
-
 		String recordType = record.getRecordType();
 		List<AggregatedRecord<?,?>> records;
-
 		if(this.bufferedRecords.containsKey(recordType)){
-
 			records = this.bufferedRecords.get(recordType);
-			
 			//logger.debug("value endtime{}, type endtime{}",record.getEndTime());
-			
 			boolean found = false;
-
 			for(AggregatedRecord bufferedRecord : records){
 				if(!(bufferedRecord instanceof AggregatedRecord)){
 					continue;
@@ -88,23 +83,20 @@ public  class Aggregation  {
 				//logger.debug("record: {}",record.toString());
 				if (util.isAggregable(record)){
 					try {
+
 						AggregatedRecord bufferedAggregatedRecord = (AggregatedRecord) bufferedRecord;
-						
 						// TODO check compatibility using getAggregable
 						bufferedAggregatedRecord.aggregate((AggregatedRecord) record);
-
 						//patch for not changed a creation time
 						//bufferedAggregatedRecord.setCreationTime(bufferedAggregatedRecord.getStartTime());
-						
 						bufferedAggregatedRecord.setCreationTime(record.getCreationTime());
-						
-						
 						found = true;
 						break;
 					} catch(NotAggregatableRecordsExceptions e) {
 						logger.trace("{} is not usable for aggregation", bufferedRecord);
 					} 
 				}
+				
 			}
 
 			if(!found){
@@ -115,6 +107,7 @@ public  class Aggregation  {
 			}
 
 		}else{
+
 			//logger.debug("else if record contains  "+recordType);
 			records = new ArrayList<AggregatedRecord<?,?>>();
 			try {
@@ -125,6 +118,8 @@ public  class Aggregation  {
 			totalBufferedRecords++;
 			this.bufferedRecords.put(recordType, records);
 		}
+
+
 
 	}
 
@@ -155,16 +150,16 @@ public  class Aggregation  {
 
 				String id=thisRecord.getId();
 				JsonObject accounting = JsonObject.empty();
-					for (String key : thisRecord.getResourceProperties().keySet()){
-						Object value=thisRecord.getResourceProperty(key);
-						if (!Utility.checkType(value)) 
-							value=(String)value.toString();
-						accounting.put(key, value);	
-					}
-					JsonDocument document = JsonDocument.create(id, accounting);	
-					listDocumentToPersist.add(document);
-				
-				
+				for (String key : thisRecord.getResourceProperties().keySet()){
+					Object value=thisRecord.getResourceProperty(key);
+					if (!Utility.checkType(value)) 
+						value=(String)value.toString();
+					accounting.put(key, value);	
+				}
+				JsonDocument document = JsonDocument.create(id, accounting);	
+				listDocumentToPersist.add(document);
+
+
 			}
 		}
 		clear();
