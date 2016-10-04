@@ -99,7 +99,7 @@ public class AggregationUtility<T extends AggregatedRecord<T,?>> {
 				@SuppressWarnings("rawtypes")
 				Comparable thisValueComparable = (Comparable) thisValue;
 				if(recordValueComparable.compareTo(thisValueComparable)!=0){
-					logger.trace("{} != {}", recordValueComparable, thisValueComparable);
+					logger.trace("isAggregable {} != {}", recordValueComparable, thisValueComparable);
 					return false;
 				}
 			}else{
