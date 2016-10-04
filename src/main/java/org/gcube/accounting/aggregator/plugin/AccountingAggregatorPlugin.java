@@ -118,7 +118,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 		if (inputs.containsKey("recovery"))
 			RecoveryMode=(Integer)inputs.get("recovery");
 
-		logger.trace("Launch with Type:{}, Interval:{}, startTime:{}, Scope:{}, Recovery:{}",aggType.toString(),interval,inputStartTime,scope,RecoveryMode);
+		logger.debug("Launch with Type:{}, Interval:{}, startTime:{}, Scope:{}, Recovery:{}",aggType.toString(),interval,inputStartTime,scope,RecoveryMode);
 		
 		//Get Configuration from service end point
 		String url=null;
@@ -431,7 +431,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			if (!succesfulDelete){
 				logger.error("Error Delete record");
 			} 
-			logger.trace("Delete complete {}, Start a insert aggregated document",countDelete);
+			logger.debug("Delete complete {}, Start a insert aggregated document",countDelete);
 			/**
 			 * delete all record and ready for insert a new aggregated record
 			 */
