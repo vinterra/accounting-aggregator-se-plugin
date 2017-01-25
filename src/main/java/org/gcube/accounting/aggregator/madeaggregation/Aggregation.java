@@ -32,9 +32,13 @@ public  class Aggregation  {
 	//count buffer records
 	protected int totalBufferedRecords;
 
-	//list Aggregate record  
-	protected Map<String, List<AggregatedRecord<?,?>>>  bufferedRecords = new HashMap<String, List<AggregatedRecord<?,?>>>();
+	//list Aggregate record
+	//TODO RIMETTERE A PROTECTED
+	public Map<String, List<AggregatedRecord<?,?>>>  bufferedRecords = new HashMap<String, List<AggregatedRecord<?,?>>>();
 
+	
+	
+	
 	public Aggregation() {
 		super();
 	}
@@ -70,57 +74,52 @@ public  class Aggregation  {
 		List<AggregatedRecord<?,?>> records;
 		if(this.bufferedRecords.containsKey(recordType)){
 			records = this.bufferedRecords.get(recordType);
-			//logger.debug("value endtime{}, type endtime{}",record.getEndTime());
 			boolean found = false;
 			for(AggregatedRecord bufferedRecord : records){
 				if(!(bufferedRecord instanceof AggregatedRecord)){
 					continue;
 				}
-
 				AggregationUtility util = new AggregationUtility(bufferedRecord);
-				//verify a record is aggregable
-				
+				//verify a record is aggregable			
 				//logger.debug("record: {}",record.toString());
 				if (util.isAggregable(record)){
 					try {
-
 						AggregatedRecord bufferedAggregatedRecord = (AggregatedRecord) bufferedRecord;
 						// TODO check compatibility using getAggregable
-						bufferedAggregatedRecord.aggregate((AggregatedRecord) record);
+						logger.debug("if -- madeAggregation aggregate");
+						bufferedAggregatedRecord.aggregate((AggregatedRecord) record);						
 						//patch for not changed a creation time
 						//bufferedAggregatedRecord.setCreationTime(bufferedAggregatedRecord.getStartTime());
 						bufferedAggregatedRecord.setCreationTime(record.getCreationTime());
 						found = true;
 						break;
 					} catch(NotAggregatableRecordsExceptions e) {
-						logger.trace("{} is not usable for aggregation", bufferedRecord);
+						logger.debug("{} is not usable for aggregation", bufferedRecord);
 					} 
 				}
-				
 			}
 
 			if(!found){
 				//logger.debug("Aggregated Record not found with execption");
+				logger.debug("if -- madeAggregation  not found with execption add");
 				records.add(record);
 				totalBufferedRecords++;
 				return;
 			}
 
 		}else{
-
 			//logger.debug("else if record contains  "+recordType);
 			records = new ArrayList<AggregatedRecord<?,?>>();
 			try {
-				records.add(getAggregatedRecord(record));			
+				logger.debug("else -- add  getAggregatedRecord");
+				records.add(getAggregatedRecord(record));
 			} catch (Exception e) {
+				logger.debug("else -- add  Exception");				
 				records.add(record);
 			}
 			totalBufferedRecords++;
 			this.bufferedRecords.put(recordType, records);
-		}
-
-
-
+		}		
 	}
 
 
