@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>org.gcube.accounting</groupId>
 	<artifactId>accounting-aggregator-se-plugin</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>Accounting Aggregator</name>
 	<description>Accounting Aggregator Smart Executor Plugin</description>
 

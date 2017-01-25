@@ -94,35 +94,52 @@ public class WorkSpaceManagement {
 			BufferedWriter filebackup =null;
 			File logFile = new File(namePathFile);
 			logFile.delete();
-						
+
 			Thread.sleep(500);
-			filebackup = new BufferedWriter(new FileWriter(logFile));	
+			filebackup = new BufferedWriter(new FileWriter(logFile));
+			int count = 0;
+			int maxTries = 3;
+			boolean exitRetry=false;
 			for (ViewRow row : viewResult){
-				if (row.document()!=null){
-					if (!row.document().content().toString().isEmpty()){
-						filebackup.write(row.document().content().toString());
-						filebackup.newLine();
+				while(!exitRetry) {
+					try {
+						if (row.document()!=null){
+							if (!row.document().content().toString().isEmpty()){
+								filebackup.write(row.document().content().toString());
+								filebackup.newLine();
+							}
+						}
+						exitRetry=true;
+					} catch (Exception e) {
+						logger.error("retry:{}",count);
+						logger.error(e.getMessage());
+						if (++count == maxTries){ 
+							filebackup.close();	
+							throw e;
+						}
 					}
 				}
 			}
+
+
 			filebackup.close();			
 			//create a zip file
 			byte[] buffer = new byte[1024];
 			FileOutputStream fos = new FileOutputStream(namePathFileZip);
 			ZipOutputStream zos = new ZipOutputStream(fos);
 			ZipEntry ze= new ZipEntry(nameFile);
-			
+
 			zos.putNextEntry(ze);
 			FileInputStream in = new FileInputStream(namePathFile);
 			int len;
 			while ((len = in.read(buffer)) > 0) {
 				zos.write(buffer, 0, len);
 			}
-			
+
 			in.close();
 			zos.closeEntry();
 			zos.close();
-			
+
 			InputStream fileZipStream = new FileInputStream(namePathFileZip);
 			WorkSpaceManagement.saveItemOnWorkspace(Constant.user,fileZipStream,"complete.zip", "Description",  folderStartTimeName.getId());
 			logger.trace("Save a backup file into workspace; bucket{},scope:{}, startkey:{},endkey:{}, aggregation type:{}",bucket,scope,startKeyString,endKeyString ,aggType.toString());
@@ -212,7 +229,7 @@ public class WorkSpaceManagement {
 			logger.trace("Save Item on WorkSpace Folder:{}, name:{},description:{}, folderID:{}",projectItem,name,description,folderId);
 			if (projectItem == null) {
 				ws.createExternalFile(name, description, null, inputStream, folderId);
-				
+
 			}				
 			else{
 				ws.remove(name, folderId);

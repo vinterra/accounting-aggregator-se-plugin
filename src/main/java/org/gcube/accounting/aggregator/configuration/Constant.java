@@ -25,7 +25,9 @@ public class Constant {
 	
 	
 	
-	public static final Integer CONNECTION_TIMEOUT=10;
-	public static final Integer NUM_RETRY=5;
-	public static final Integer CONNECTION_TIMEOUT_BUCKET=10;
+	public static final Integer CONNECTION_TIMEOUT=15;
+	public static final Integer NUM_RETRY=6;
+	public static final Integer CONNECTION_TIMEOUT_BUCKET=15;
+	public static final Integer VIEW_TIMEOUT_BUCKET=120;
+	public static final Integer MAX_REQUEST_LIFE_TIME=120;
 }
