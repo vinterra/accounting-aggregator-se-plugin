@@ -349,8 +349,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 	 * @throws Exception
 	 */	
 	protected boolean elaborateRow(ViewRow row ,List<JsonDocument>  documentElaborate) throws Exception{
-		int i=0;
-		int size=aggregate.bufferedRecords.size();
+		int i=0;		
 		try {
 			//patch for field of long type  
 			String document=row.value().toString().replace("\":", "=").replace("\"", "");
@@ -385,8 +384,6 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			logger.error("record is not elaborated:"+row.toString()+" but it will be persisted");
 			logger.error("error elaborateRow", e);
 			logger.error("i:{}",i);			
-			logger.error("size before:{}, after buffer size:{}",size,aggregate.bufferedRecords.size());
-			//throw e;
 			return false;
 		}
 	}

@@ -32,9 +32,8 @@ public  class Aggregation  {
 	//count buffer records
 	protected int totalBufferedRecords;
 
-	//list Aggregate record
-	//TODO RIMETTERE A PROTECTED
-	public Map<String, List<AggregatedRecord<?,?>>>  bufferedRecords = new HashMap<String, List<AggregatedRecord<?,?>>>();
+	//list Aggregate record	
+	protected Map<String, List<AggregatedRecord<?,?>>>  bufferedRecords = new HashMap<String, List<AggregatedRecord<?,?>>>();
 
 	
 	
@@ -86,7 +85,7 @@ public  class Aggregation  {
 					try {
 						AggregatedRecord bufferedAggregatedRecord = (AggregatedRecord) bufferedRecord;
 						// TODO check compatibility using getAggregable
-						logger.debug("if -- madeAggregation aggregate");
+						//logger.debug("if -- madeAggregation aggregate");
 						bufferedAggregatedRecord.aggregate((AggregatedRecord) record);						
 						//patch for not changed a creation time
 						//bufferedAggregatedRecord.setCreationTime(bufferedAggregatedRecord.getStartTime());
@@ -101,7 +100,7 @@ public  class Aggregation  {
 
 			if(!found){
 				//logger.debug("Aggregated Record not found with execption");
-				logger.debug("if -- madeAggregation  not found with execption add");
+				//logger.debug("if -- madeAggregation  not found with execption add");
 				records.add(record);
 				totalBufferedRecords++;
 				return;
@@ -111,10 +110,10 @@ public  class Aggregation  {
 			//logger.debug("else if record contains  "+recordType);
 			records = new ArrayList<AggregatedRecord<?,?>>();
 			try {
-				logger.debug("else -- add  getAggregatedRecord");
+				//logger.debug("else -- add  getAggregatedRecord");
 				records.add(getAggregatedRecord(record));
 			} catch (Exception e) {
-				logger.debug("else -- add  Exception");				
+				//logger.debug("else -- add  Exception");				
 				records.add(record);
 			}
 			totalBufferedRecords++;
