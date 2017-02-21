@@ -20,17 +20,15 @@ public class Tests {
 
 	@Before
 	public void beforeTest(){
-		
-	}
-
-	@Test
-	public void testLaunch() throws Exception {
-		
 		SecurityTokenProvider.instance.set("36501a0d-a205-4bf1-87ad-4c7185faa0d6-98187548");
 		//FOR DEBUG
 		String scopeDebug="/gcube/devNext";
 		ScopeProvider.instance.set(scopeDebug);
 		// END FOR DEBUG
+	}
+
+	@Test
+	public void testLaunch() throws Exception {
 				
 		Map<String, Object> inputs = new HashMap<String, Object>(); 	
 		//type aggregation
