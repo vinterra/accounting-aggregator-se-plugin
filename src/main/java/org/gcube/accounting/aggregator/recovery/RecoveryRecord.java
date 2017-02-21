@@ -91,11 +91,12 @@ public class RecoveryRecord {
 
 	@SuppressWarnings("null")
 	public static void searchFile(Cluster cluster,AggregatorPersistenceBackendQueryConfiguration configuration) throws Exception{
-
+		
 		try{
 			prepareConnection(cluster,configuration); 			
 			File folderDelete = new File(Constant.PATH_DIR_BACKUP_DELETE);		
 			if (folderDelete.exists() && folderDelete.isDirectory()) {
+				logger.trace("Start Recovery delete");
 				File[] listOfFilesDelete = folderDelete.listFiles();				
 				for (int i = 0; i < listOfFilesDelete.length; i++) {			
 					if (listOfFilesDelete[i].isFile()){
@@ -114,6 +115,7 @@ public class RecoveryRecord {
 			//search for insert file
 			File folderInsert= new File(Constant.PATH_DIR_BACKUP_INSERT);
 			if (folderInsert.exists() && folderInsert.isDirectory()) {
+				logger.trace("Start Recovery insert");
 				File[] listOfFilesInsert = folderInsert.listFiles();
 				for (int i = 0; i < listOfFilesInsert.length; i++) {
 					if (listOfFilesInsert[i].isFile()) {
