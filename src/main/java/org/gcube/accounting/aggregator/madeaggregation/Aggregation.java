@@ -113,7 +113,7 @@ public  class Aggregation  {
 				//logger.debug("else -- add  getAggregatedRecord");
 				records.add(getAggregatedRecord(record));
 			} catch (Exception e) {
-							
+				logger.debug("pre Exception but records");	
 				records.add(record);
 				logger.debug("Exception but records Add e:{}",e);
 			}
