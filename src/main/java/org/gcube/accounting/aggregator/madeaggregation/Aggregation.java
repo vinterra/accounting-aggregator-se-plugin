@@ -113,8 +113,9 @@ public  class Aggregation  {
 				//logger.debug("else -- add  getAggregatedRecord");
 				records.add(getAggregatedRecord(record));
 			} catch (Exception e) {
-				//logger.debug("else -- add  Exception");				
+							
 				records.add(record);
+				logger.debug("Exception but records Add e:{}",e);
 			}
 			totalBufferedRecords++;
 			this.bufferedRecords.put(recordType, records);
