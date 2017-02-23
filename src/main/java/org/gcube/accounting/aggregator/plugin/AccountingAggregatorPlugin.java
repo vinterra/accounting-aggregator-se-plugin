@@ -24,6 +24,7 @@ import org.gcube.common.scope.api.ScopeProvider;
 import org.gcube.documentstore.exception.InvalidValueException;
 import org.gcube.documentstore.persistence.PersistenceCouchBase;
 import org.gcube.documentstore.records.AggregatedRecord;
+import org.gcube.documentstore.records.Record;
 import org.gcube.documentstore.records.RecordUtility;
 import org.gcube.vremanagement.executor.plugin.Plugin;
 import org.slf4j.Logger;
@@ -351,7 +352,8 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 	 * @throws Exception
 	 */	
 	protected Boolean elaborateRow(ViewRow row ,List<JsonDocument>  documentElaborate) throws Exception{
-		int i=0;		
+		int i=0;	
+		JsonDocument documentJson = null;
 		try {
 			//patch for field of long type  
 			String document=row.value().toString().replace("\":", "=").replace("\"", "");
@@ -361,7 +363,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			//prepare a document for elaborate
 			String identifier=(String) row.document().content().get("id");
 			i=3;//3
-			JsonDocument documentJson = JsonDocument.create(identifier, row.document().content());
+			documentJson = JsonDocument.create(identifier, row.document().content());
 			i=4;//4
 
 			@SuppressWarnings("rawtypes")			
@@ -376,16 +378,26 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 		} 
 		catch(InvalidValueException ex){
 			logger.warn("InvalidValueException - Record is not valid. Anyway, it will be persisted i:{}",i);
+			if ((i==5)&&(documentJson!=null)){
+				documentElaborate.add(documentJson);
+			}
 			return false;
 		}
 		catch(RuntimeException exr){
-			logger.warn("Runtime Exception -Record is not valid. Anyway, it will be persisted i:{}",i);
+			logger.warn("Runtime Exception exr",exr);
+			logger.warn("Runtime Exception -Record is not valid. Anyway, it will be persisted i:{}",i);		
+			if ((i==5)&&(documentJson!=null)){
+				documentElaborate.add(documentJson);
+			}
 			return false;
 		}
 		catch (Exception e) {
 			logger.error("record is not elaborated:"+row.toString()+" but it will be persisted");
 			logger.error("error elaborateRow", e);
-			logger.error("i:{}",i);			
+			logger.error("i:{}",i);
+			if ((i==5)&&(documentJson!=null)){
+				documentElaborate.add(documentJson);
+			}
 			return false;
 		}
 	}
