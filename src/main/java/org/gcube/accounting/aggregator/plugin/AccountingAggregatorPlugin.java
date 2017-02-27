@@ -378,7 +378,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 		} 
 		catch(InvalidValueException ex){
 			logger.warn("InvalidValueException - Record is not valid. Anyway, it will be persisted i:{}",i);
-			logger.warn("Runtime Exception exr",ex);
+			logger.warn("Runtime Exception ex",ex);
 			if ((i==5)&&(documentJson!=null)){
 				documentElaborate.add(documentJson);
 			}
@@ -467,7 +467,8 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 					countDelete ++;
 					try{
 						accountingBucket.remove(doc.id(),persisted,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);
-					}catch(Exception e){
+					}
+					catch(Exception e){
 						logger.warn("doc:{} not deleted retry:{} for error:{}",doc.id(),index,e);
 						Thread.sleep(1500);
 						try{
@@ -475,10 +476,10 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 								notDeletedTemp.add(doc);
 						}
 						catch(Exception ext){
-							logger.warn("doc:{} not verify for delete because timeout, retry:{}",doc.id(),index);
+							logger.warn("doc:{} not verify for delete because timeout, retry:{}",doc.id(),index,ext);
 							Thread.sleep(3000);
 							try{
-								if (!accountingBucket.exists(doc.id()))
+								if (accountingBucket.exists(doc.id()))
 									notDeletedTemp.add(doc);
 							}
 							catch(Exception ex)	{
