@@ -17,7 +17,7 @@ public class AggregatorPersistenceBackendQueryConfiguration extends AccountingPe
 	}
 	
 	/**
-	 * @param class1 The class of the persistence to instantiate
+	 * @param class The class of the persistence to instantiate
 	 * @throws Exception if fails
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })

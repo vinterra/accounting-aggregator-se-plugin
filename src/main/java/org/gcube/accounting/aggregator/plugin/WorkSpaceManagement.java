@@ -38,7 +38,7 @@ public class WorkSpaceManagement {
 	public static Logger logger = LoggerFactory.getLogger(Aggregation.class);
 
 	/**
-	 * Save a backup file compressed into workspace 
+	 * Save a compressed backup file into workspace 
 	 * @param bucket
 	 * @param startKeyString
 	 * @param endKeyString
@@ -90,7 +90,7 @@ public class WorkSpaceManagement {
 				throw e;
 			}
 
-			//manage error
+			
 			BufferedWriter filebackup =null;
 			File logFile = new File(namePathFile);
 			logFile.delete();
@@ -168,7 +168,7 @@ public class WorkSpaceManagement {
 		try {
 			HomeManagerFactory factory = HomeLibrary.getHomeManagerFactory();
 			HomeManager manager = factory.getHomeManager();
-			User userWS = manager.createUser(user);
+			User userWS = manager.createUser(user);			
 			Home home = manager.getHome(userWS);
 			Workspace ws = home.getWorkspace();
 			WorkspaceFolder root = ws.getRoot();
@@ -234,8 +234,7 @@ public class WorkSpaceManagement {
 			else{
 				ws.remove(name, folderId);
 				Thread.sleep(2000);
-				ws.createExternalFile(name, description, null, inputStream, folderId);
-				//ws.updateItem(projectItem.getId(), inputStream);
+				ws.createExternalFile(name, description, null, inputStream, folderId);			
 			}
 			return;
 		} catch (Exception e) {			

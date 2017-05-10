@@ -1,10 +1,16 @@
 package org.gcube.accounting.aggregator.plugin;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.PrintStream;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +24,20 @@ import org.gcube.accounting.aggregator.madeaggregation.Aggregation;
 import org.gcube.accounting.aggregator.madeaggregation.AggregationType;
 import org.gcube.accounting.aggregator.persistence.AggregatorPersistenceBackendQueryConfiguration;
 import org.gcube.accounting.aggregator.recovery.RecoveryRecord;
+import org.gcube.accounting.datamodel.aggregation.AggregatedJobUsageRecord;
+import org.gcube.accounting.datamodel.aggregation.AggregatedPortletUsageRecord;
 import org.gcube.accounting.datamodel.aggregation.AggregatedServiceUsageRecord;
+import org.gcube.accounting.datamodel.aggregation.AggregatedStorageUsageRecord;
+import org.gcube.accounting.datamodel.aggregation.AggregatedTaskUsageRecord;
+import org.gcube.accounting.datamodel.usagerecords.JobUsageRecord;
+import org.gcube.accounting.datamodel.usagerecords.PortletUsageRecord;
 import org.gcube.accounting.datamodel.usagerecords.ServiceUsageRecord;
+import org.gcube.accounting.datamodel.usagerecords.StorageUsageRecord;
+import org.gcube.accounting.datamodel.usagerecords.TaskUsageRecord;
 import org.gcube.common.scope.api.ScopeProvider;
 import org.gcube.documentstore.exception.InvalidValueException;
 import org.gcube.documentstore.persistence.PersistenceCouchBase;
 import org.gcube.documentstore.records.AggregatedRecord;
-import org.gcube.documentstore.records.Record;
 import org.gcube.documentstore.records.RecordUtility;
 import org.gcube.vremanagement.executor.plugin.Plugin;
 import org.slf4j.Logger;
@@ -105,15 +118,37 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			throw new IllegalArgumentException("Interval and type must be defined");
 
 		AggregationType aggType =AggregationType.valueOf((String)inputs.get("type"));
-		Integer interval=(Integer)inputs.get("interval")* aggType.getMultiplierFactor();
+		Integer intervaTot=(Integer)inputs.get("interval");
+		Integer interval=intervaTot* aggType.getMultiplierFactor();
 
 		//new feature for not elaborate the full range but a set of small intervals
 		if (inputs.containsKey("intervalStep"))
 			interval=(Integer)inputs.get("intervalStep");
 
 		Integer inputStartTime=null;
+		String pathFile = null;
 		if (inputs.containsKey("startTime"))
 			inputStartTime=(Integer)inputs.get("startTime");
+		else{
+			//get start time with file 
+			logger.debug("Attention get start Time from file");
+			if (inputs.containsKey("pathFile")){
+				//get start time from file 
+				pathFile=(String) inputs.get("pathFile");
+				logger.error("open file:{}",pathFile);
+				
+				BufferedReader reader = new BufferedReader(new FileReader(pathFile));
+				String line;
+				while ((line = reader.readLine()) != null)
+				{
+					line=line.trim();
+					inputStartTime=Integer.valueOf(line);
+					logger.debug("Start Time:{}",inputStartTime);
+				}
+				reader.close();
+				
+			}
+		}
 
 		Boolean currentScope =false;
 		String scope=null;
@@ -183,28 +218,60 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 		Cluster cluster = CouchbaseCluster.create(ENV, url);
 
 		//Define a type for aggregate
+		RecordUtility.addRecordPackage(PortletUsageRecord.class.getPackage());
+		RecordUtility.addRecordPackage(AggregatedPortletUsageRecord.class.getPackage());
+
+		RecordUtility.addRecordPackage(JobUsageRecord.class.getPackage());
+		RecordUtility.addRecordPackage(AggregatedJobUsageRecord.class.getPackage());
+
+		RecordUtility.addRecordPackage(TaskUsageRecord.class.getPackage());
+		RecordUtility.addRecordPackage(AggregatedTaskUsageRecord.class.getPackage());
+
+		RecordUtility.addRecordPackage(StorageUsageRecord.class.getPackage());
+		RecordUtility.addRecordPackage(AggregatedStorageUsageRecord.class.getPackage());
+		
 		RecordUtility.addRecordPackage(ServiceUsageRecord.class.getPackage());
 		RecordUtility.addRecordPackage(AggregatedServiceUsageRecord.class.getPackage());
-
-		initFolder();		
-
-
-		if ((recoveryMode==2)||(recoveryMode==0)){
-			logger.debug("Recovery mode enabled");
-			RecoveryRecord.searchFile(cluster,configuration);
+		//end define
+		
+		Date today = new Date();
+		Date endScriptTime  = new Date();
+		if (inputs.containsKey("endScriptTime")){
+			DateFormat df = new SimpleDateFormat ("MM/dd/yyyy HH:mm");
+			
+			endScriptTime = df.parse ((today.getMonth()+1)+"/"+today.getDate()+"/"+(today.getYear()+1900)	+" "+(String)inputs.get("endScriptTime"));
+			logger.debug("Script Run until :{}"+endScriptTime);
 		}
 
-		if (recoveryMode!=2){
-			for (String bucket:listBucket){
-				logger.trace("OpenBucket:{}",bucket);
-				accountingBucket = cluster.openBucket(bucket,password);
-				//elaborate bucket, with scope, type aggregation and interval 
-				elaborateBucket(bucket,scope, inputStartTime, interval, aggType);
+		do {
+			logger.debug("--Start Time Loop:{}"+inputStartTime);
+			initFolder();		
+			if ((recoveryMode==2)||(recoveryMode==0)){
+				logger.debug("Recovery mode enabled");
+				RecoveryRecord.searchFile(cluster,configuration);
+			}
+	
+			if (recoveryMode!=2){				
+				for (String bucket:listBucket){
+					logger.trace("OpenBucket:{}",bucket);
+					accountingBucket = cluster.openBucket(bucket,password);
+					//elaborate bucket, with scope, type aggregation and interval 
+					elaborateBucket(bucket,scope, inputStartTime, interval, aggType);
+				}
+				if (inputs.containsKey("pathFile")){
+					//update a file for new start time
+					FileOutputStream file = new FileOutputStream(pathFile);
+				    PrintStream output = new PrintStream(file);
+				    logger.debug("Update pathfile:{} with new start time:{}",pathFile,inputStartTime-intervaTot);
+				    output.println(inputStartTime-intervaTot);
+				    inputStartTime=inputStartTime-intervaTot;
+				    today = new Date();
+				}
+				logger.debug("Complete countInsert{}, countDelete{}",countInsert,countDelete);
 			}
 
-			logger.debug("Complete countInsert{}, countDelete{}",countInsert,countDelete);
-		}
-
+		} while(today.compareTo(endScriptTime)<0);
+		logger.debug("Plugin Terminated");
 	}
 
 
@@ -280,8 +347,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 		String startAllKeyString = format.format(nowTemp.getTime());
 		if (backup){
 			logger.debug("Start Backup");
-			WorkSpaceManagement.onSaveBackupFile(accountingBucket,bucket,scope,startAllKeyString, endAllKeyString,aggType);
-			//logger.debug("Backup complete startKeyString{}, endKeyString{}",startAllKeyString,endAllKeyString);
+			WorkSpaceManagement.onSaveBackupFile(accountingBucket,bucket,scope,startAllKeyString, endAllKeyString,aggType);		
 		}
 		else
 			logger.debug("No Backup required");
@@ -317,9 +383,8 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 
 			} catch (Exception e) {
 				logger.error("Exception error VIEW",e.getLocalizedMessage(),e);
-				//throw e;
 			}
-
+			
 			// Iterate through the returned ViewRows
 			aggregate = new Aggregation();
 			documentElaborate.clear();
@@ -328,13 +393,15 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			for (ViewRow row : viewResult) 
 				resultElaborate=elaborateRow(row,documentElaborate);
 			logger.debug("End elaborate row");
-			//File backup have a name with scope e 
+		
+			//Backup File saved  
 			String nameFileBackup="";
 			if (scope!=null)
 				nameFileBackup=scope.replace("/", "")+"-"+startKeyString+"-"+endKeyString;
 			else
 				nameFileBackup=startKeyString+"-"+endKeyString;
-			//save into db (delete no aggregate record and insert a record aggregate)
+			
+
 			reallyFlush(aggregate,documentElaborate,nameFileBackup);
 
 			endKeyString = startKeyString;
@@ -450,6 +517,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			Integer index=0;
 			boolean succesfulDelete=false;
 			logger.trace("Start a delete document:{}",docs.size());
+			
 			//before elaborate a record, create a backup file 
 			List<JsonDocument> notDeleted = docs;
 			List<JsonDocument> notInserted = aggregate.reallyFlush();
@@ -506,6 +574,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			
 			logger.debug("notDeletedTemp size:{} notDeleted:{}",notDeletedTemp.size(),notDeleted.size());
 			logger.debug("Delete complete:{}, Start a insert aggregated document:{}",countDelete,notInserted.size());
+		
 			// delete all record and ready for insert a new aggregated record			 
 			if (succesfulDelete){
 				//if successful record delete, delete backup file 
