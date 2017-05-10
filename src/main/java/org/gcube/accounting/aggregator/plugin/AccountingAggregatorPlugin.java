@@ -571,8 +571,6 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			if (!succesfulDelete){
 				logger.error("Error Delete record");
 			}
-			
-			logger.debug("notDeletedTemp size:{} notDeleted:{}",notDeletedTemp.size(),notDeleted.size());
 			logger.debug("Delete complete:{}, Start a insert aggregated document:{}",countDelete,notInserted.size());
 		
 			// delete all record and ready for insert a new aggregated record			 
