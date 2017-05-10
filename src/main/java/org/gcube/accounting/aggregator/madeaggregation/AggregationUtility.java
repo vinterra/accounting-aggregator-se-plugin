@@ -91,7 +91,6 @@ public class AggregationUtility<T extends AggregatedRecord<T,?>> {
 			
 			Serializable recordValue = record.getResourceProperty(field);
 			Serializable thisValue = t.getResourceProperty(field);
-			//logger.error("isAggregable-field:{} ,recordValue:{}, thisValue:{}",field,recordValue,thisValue);
 			
 			if(recordValue instanceof Comparable && thisValue instanceof Comparable){
 				@SuppressWarnings("rawtypes")
@@ -103,14 +102,7 @@ public class AggregationUtility<T extends AggregatedRecord<T,?>> {
 					return false;
 				}
 			}else{
-				/*
-				if (recordValue==null){
-					//logger.trace("{} != {}", recordValue, thisValue);
-					return false;
-				}
-				*/
 				if(recordValue.hashCode()!=this.hashCode()){
-					//logger.trace("{} != {}", recordValue, thisValue);
 					return false;
 				}
 				

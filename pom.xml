@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>org.gcube.accounting</groupId>
 	<artifactId>accounting-aggregator-se-plugin</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<name>Accounting Aggregator</name>
 	<description>Accounting Aggregator Smart Executor Plugin</description>
 
@@ -42,21 +42,14 @@
 			<version>[1.0.0-SNAPSHOT, 2.0.0-SNAPSHOT)</version>
 			<scope>provided</scope>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>org.gcube.common</groupId>
 			<artifactId>common-authorization</artifactId>
-
 		</dependency>
-
 		<dependency>
 			<groupId>org.gcube.common</groupId>
 			<artifactId>authorization-client</artifactId>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.gcube.core</groupId>
 			<artifactId>common-scope</artifactId>
@@ -68,7 +61,6 @@
 			<artifactId>home-library-jcr</artifactId>
 			<version>[2.0.0-SNAPSHOT,3.0.0-SNAPSHOT)</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.gcube.common</groupId>
 			<artifactId>home-library</artifactId>
@@ -76,18 +68,15 @@
 			<scope>compile</scope>
 		</dependency>
 		<!-- END Home Library -->
-
 		<dependency>
 			<groupId>org.gcube.common</groupId>
 			<artifactId>common-authorization</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.gcube.common</groupId>
 			<artifactId>authorization-client</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -114,15 +103,13 @@
 			<version>[1.0.1-SNAPSHOT, 2.0.0-SNAPSHOT)</version>
 		</dependency>
 		<dependency>
-			<artifactId>document-store-lib</artifactId>
 			<groupId>org.gcube.data.publishing</groupId>
+			<artifactId>document-store-lib</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.gcube.accounting</groupId>
 			<artifactId>accounting-lib</artifactId>
-			<version>[2.2.0-SNAPSHOT,3.0.0-SNAPSHOT)</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

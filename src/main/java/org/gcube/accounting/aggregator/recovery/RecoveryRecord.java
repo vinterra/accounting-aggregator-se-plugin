@@ -55,7 +55,6 @@ public class RecoveryRecord {
 	 */
 	protected static void prepareConnection(Cluster cluster,AggregatorPersistenceBackendQueryConfiguration configuration) throws Exception {
 
-		String url = configuration.getProperty(ConfigurationServiceEndpoint.URL_PROPERTY_KEY);
 		String password = configuration.getProperty(ConfigurationServiceEndpoint.PASSWORD_PROPERTY_KEY);
 		try {
 
@@ -89,7 +88,7 @@ public class RecoveryRecord {
 	}
 
 
-	@SuppressWarnings("null")
+	
 	public static void searchFile(Cluster cluster,AggregatorPersistenceBackendQueryConfiguration configuration) throws Exception{
 		
 		try{
@@ -135,8 +134,7 @@ public class RecoveryRecord {
 		catch(Exception e){
 			logger.error("Error for list file:{}",e);
 		}
-
-		//cluster.disconnect();
+		
 	}
 	public static boolean ElaborateDeleteFile(String nameFile) throws IOException{
 		HashMap<String, Object> mapper = new Gson().fromJson(new FileReader(new File(nameFile)),  HashMap.class);
@@ -208,27 +206,28 @@ public class RecoveryRecord {
 					usageRecordType="";
 				if (recordType==null)
 					recordType="";						
-
+				JsonDocument response = null;
 				if  ((recordType.equals("ServiceUsageRecord")) || (usageRecordType.equals("ServiceUsageRecord"))){
 					JsonDocument document = JsonDocument.create(identifier, accounting);
-					JsonDocument response = bucketService.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);
+					response = bucketService.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);
 				}
 				if  ((recordType.equals("StorageUsageRecord")) || (usageRecordType.equals("StorageUsageRecord"))){
 					JsonDocument document = JsonDocument.create(identifier, accounting);					
-					JsonDocument response = bucketStorage.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);
+					response = bucketStorage.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);
 				}
 				if  ((recordType.equals("JobUsageRecord")) || (usageRecordType.equals("JobUsageRecord"))){
 					JsonDocument document = JsonDocument.create(identifier, accounting);
-					JsonDocument response = bucketJob.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);
+					response = bucketJob.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);
 				}
 				if  ((recordType.equals("TaskUsageRecord")) || (usageRecordType.equals("TaskUsageRecord"))){
 					JsonDocument document = JsonDocument.create(identifier, accounting);
-					JsonDocument response = bucketTask.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);					
+					response = bucketTask.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);					
 				}
 				if  ((recordType.equals("PortletUsageRecord")) || (usageRecordType.equals("PortletUsageRecord"))){
 					JsonDocument document = JsonDocument.create(identifier, accounting);
-					JsonDocument response = bucketPortlet.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);					
+					response = bucketPortlet.upsert(document,PersistTo.MASTER,Constant.CONNECTION_TIMEOUT_BUCKET, TimeUnit.SECONDS);					
 				}
+				logger.trace("Elaborate Insert fileJsondocument response:{}",response);
 			}catch(Exception e){
 				logger.error("Problem with recovery file and insert record excepiton:{}",e.getLocalizedMessage());						
 				throw e;

@@ -12,8 +12,6 @@ public enum DesignID {
 	accounting_job("accounting_job","JobUsageRecordAggregated","all","scope"),
 	accounting_task("accounting_task","TaskUsageRecordAggregated","all","scope");
 	
-	
-	
 	private String nameBucket;	
 	private String nameDesign;
 	private String nameView;

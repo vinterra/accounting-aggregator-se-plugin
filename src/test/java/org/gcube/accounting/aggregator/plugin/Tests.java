@@ -37,7 +37,10 @@ public class Tests {
 		inputs.put("interval",1 );
 		/* OPTIONAL INPUT */
 		//change to time
-		inputs.put("startTime", 6);
+		//inputs.put("startTime", 6);
+		
+		//inputs.put("pathFile","/home/pieve/startTime");
+		//inputs.put("endScriptTime","16:00");
 		//specify bucket
 		
 		inputs.put("bucket","accounting_service");
@@ -45,6 +48,9 @@ public class Tests {
 		//current scope
 		inputs.put("currentScope",false);
 		//specify user for save to workspace
+		/*OPTIONAL INPUT for work a partial interval */
+		//inputs.put("intervalStep",6);
+		
 		
 		//specify a recovery 0 default recovery and aggregate, 1 only aggregate, 2 only recovery
 		inputs.put("recovery",0);

@@ -35,9 +35,6 @@ public  class Aggregation  {
 	//list Aggregate record	
 	protected Map<String, List<AggregatedRecord<?,?>>>  bufferedRecords = new HashMap<String, List<AggregatedRecord<?,?>>>();
 
-	
-	
-	
 	public Aggregation() {
 		super();
 	}
@@ -79,16 +76,13 @@ public  class Aggregation  {
 					continue;
 				}
 				AggregationUtility util = new AggregationUtility(bufferedRecord);
-				//verify a record is aggregable			
-				//logger.debug("record: {}",record.toString());
+				//verify a record is aggregable						
 				if (util.isAggregable(record)){
 					try {
 						AggregatedRecord bufferedAggregatedRecord = (AggregatedRecord) bufferedRecord;
-						// TODO check compatibility using getAggregable
 						//logger.debug("if -- madeAggregation aggregate");
 						bufferedAggregatedRecord.aggregate((AggregatedRecord) record);						
 						//patch for not changed a creation time
-						//bufferedAggregatedRecord.setCreationTime(bufferedAggregatedRecord.getStartTime());
 						bufferedAggregatedRecord.setCreationTime(record.getCreationTime());
 						found = true;
 						break;
@@ -97,20 +91,15 @@ public  class Aggregation  {
 					} 
 				}
 			}
-
 			if(!found){
-				//logger.debug("Aggregated Record not found with execption");
-				//logger.debug("if -- madeAggregation  not found with execption add");
 				records.add(record);
 				totalBufferedRecords++;
 				return;
 			}
 
 		}else{
-			//logger.debug("else if record contains  "+recordType);
 			records = new ArrayList<AggregatedRecord<?,?>>();
 			try {
-				//logger.debug("else -- add  getAggregatedRecord");
 				records.add(getAggregatedRecord(record));
 			} catch (Exception e) {
 				logger.debug("pre Exception but records");	
@@ -122,8 +111,6 @@ public  class Aggregation  {
 		}		
 	}
 
-
-
 	/**
 	 * Reset buffer records
 	 */
@@ -131,7 +118,6 @@ public  class Aggregation  {
 		totalBufferedRecords=0;
 		bufferedRecords.clear();
 	}
-
 
 	/**
 	 * 
@@ -177,12 +163,5 @@ public  class Aggregation  {
 			madeAggregation(record);
 		}
 	}
-
-
-
-
-
-
-
 }
 
