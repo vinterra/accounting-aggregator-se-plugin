@@ -248,7 +248,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			DateFormat df = new SimpleDateFormat ("MM/dd/yyyy HH:mm");
 			
 			endScriptTime = df.parse ((today.getMonth()+1)+"/"+today.getDate()+"/"+(today.getYear()+1900)	+" "+(String)inputs.get("endScriptTime"));
-			logger.debug("Script Run until :{}"+endScriptTime);
+			logger.debug("Script Run until :{}",endScriptTime);
 		}
 
 		do {
