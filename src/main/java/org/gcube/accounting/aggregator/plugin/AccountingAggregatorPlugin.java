@@ -135,7 +135,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			if (inputs.containsKey("pathFile")){
 				//get start time from file 
 				pathFile=(String) inputs.get("pathFile");
-				logger.error("open file:{}",pathFile);
+				logger.trace("open file:{}",pathFile);
 				
 				BufferedReader reader = new BufferedReader(new FileReader(pathFile));
 				String line;
