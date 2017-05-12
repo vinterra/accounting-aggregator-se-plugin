@@ -260,14 +260,14 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			}
 	
 			if (recoveryMode!=2){				
-				/*
+				
 				for (String bucket:listBucket){
 					logger.trace("OpenBucket:{}",bucket);
 					accountingBucket = cluster.openBucket(bucket,password);
 					//elaborate bucket, with scope, type aggregation and interval 
 					elaborateBucket(bucket,scope, inputStartTime, interval, aggType);
 				}
-				*/
+				
 				if (inputs.containsKey("pathFile")){
 					//update a file for new start time
 					FileOutputStream file = new FileOutputStream(pathFile);
@@ -279,8 +279,8 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 				    Date dateNow = new Date();
 				    Calendar data = Calendar.getInstance();
 				    data.setTime(dateNow);
-				    data.add(Calendar.DATE,-(inputStartTime-intervaTot));
 				    
+				    data.add(Calendar.DATE,-(inputStartTime-intervaTot));
 				    SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
 				    
 				    String formatted = format1.format(data.getTime());
