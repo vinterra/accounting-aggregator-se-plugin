@@ -39,7 +39,7 @@ public class Tests {
 		//change to time
 		//inputs.put("startTime", 6);
 		
-		//inputs.put("pathFile","/home/pieve/startTime");
+		inputs.put("pathFile","/home/pieve/startTime");
 		//inputs.put("endScriptTime","16:00");
 		//specify bucket
 		

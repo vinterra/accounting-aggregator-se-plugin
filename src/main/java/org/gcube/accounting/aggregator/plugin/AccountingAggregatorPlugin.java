@@ -142,7 +142,15 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 				while ((line = reader.readLine()) != null)
 				{
 					line=line.trim();
-					inputStartTime=Integer.valueOf(line)-1;
+					
+					String strDate = line;
+					SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
+					Date d1 = fmt.parse(strDate);
+					Date now = new Date(); 
+					
+					long millisDiff = now.getTime() - d1.getTime();
+					inputStartTime= (int) (millisDiff / 86400000);
+					logger.debug("Read Start Time:{}",d1.toString());
 					logger.debug("Start Time:{}",inputStartTime);
 				}
 				reader.close();
@@ -252,18 +260,32 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 			}
 	
 			if (recoveryMode!=2){				
+				/*
 				for (String bucket:listBucket){
 					logger.trace("OpenBucket:{}",bucket);
 					accountingBucket = cluster.openBucket(bucket,password);
 					//elaborate bucket, with scope, type aggregation and interval 
 					elaborateBucket(bucket,scope, inputStartTime, interval, aggType);
 				}
+				*/
 				if (inputs.containsKey("pathFile")){
 					//update a file for new start time
 					FileOutputStream file = new FileOutputStream(pathFile);
 				    PrintStream output = new PrintStream(file);
 				    logger.debug("Update pathfile:{} with new start time:{}",pathFile,inputStartTime-intervaTot);
-				    output.println(inputStartTime-intervaTot);
+				    
+				    
+				    
+				    Date dateNow = new Date();
+				    Calendar data = Calendar.getInstance();
+				    data.setTime(dateNow);
+				    data.add(Calendar.DATE,-(inputStartTime-intervaTot));
+				    
+				    SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
+				    
+				    String formatted = format1.format(data.getTime());
+				    
+				    output.println(formatted);
 				    inputStartTime=inputStartTime-intervaTot;
 				    today = new Date();
 				}
