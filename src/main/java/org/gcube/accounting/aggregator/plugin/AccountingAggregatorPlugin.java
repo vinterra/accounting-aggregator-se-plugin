@@ -142,7 +142,7 @@ public class AccountingAggregatorPlugin extends Plugin<AccountingAggregatorPlugi
 				while ((line = reader.readLine()) != null)
 				{
 					line=line.trim();
-					inputStartTime=Integer.valueOf(line);
+					inputStartTime=Integer.valueOf(line)-1;
 					logger.debug("Start Time:{}",inputStartTime);
 				}
 				reader.close();
