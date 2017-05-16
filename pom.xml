@@ -17,6 +17,7 @@
 		<distroDirectory>distro</distroDirectory>
 		<serviceClass>Accounting</serviceClass>
 		<!-- <maven.compiler.source>1.7</maven.compiler.source> -->
+		 
 	</properties>
 
 	<scm>
@@ -101,12 +102,12 @@
 		<dependency>
 			<groupId>org.gcube.data.publishing</groupId>
 			<artifactId>document-store-lib-couchbase</artifactId>
-			<version>[1.0.1-SNAPSHOT, 2.0.0-SNAPSHOT)</version>
+			<version>[1.0.1-SNAPSHOT, 1.6.0-SNAPSHOT)</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.gcube.data.publishing</groupId>
-			<artifactId>document-store-lib</artifactId>
-			<version>[1.0.1-SNAPSHOT, 3.0.0-SNAPSHOT)</version>
+			<artifactId>document-store-lib</artifactId>			
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
