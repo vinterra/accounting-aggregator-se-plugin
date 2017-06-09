@@ -1,5 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
 <ReleaseNotes>
-	<Changeset component="org.gcube.accounting.accounting-aggregator-se-plugin.1.0.0" date="${buildDate}">
+	<Changeset component="org.gcube.accounting.accounting-aggregator-se-plugin.1.1.0" date="${buildDate}">
+		<Change>Added input parameter which indicate to plugin last possibile start time to start to aggregate another day</Change>
+		<Change>Added input parameter which indicate to plugin where reading/writing the date is going to/was elaborating</Change>	
+	</Changeset>
+	<Changeset component="org.gcube.accounting.accounting-aggregator-se-plugin.1.0.1" date="2017-03-16">
+		<Change>Enhached logging</Change>	
+	</Changeset>
+	<Changeset component="org.gcube.accounting.accounting-aggregator-se-plugin.1.0.0" date="2016-11-07">
 		<Change>First Release</Change>	
 	</Changeset>
 </ReleaseNotes>
