@@ -27,3 +27,4 @@ src/main/java/org/gcube/accounting/aggregator/recovery/RecoveryRecord.java -text
 src/main/resources/META-INF/services/org.gcube.vremanagement.executor.plugin.PluginDeclaration -text
 src/main/resources/logback-test.xml -text
 src/test/java/org/gcube/accounting/aggregator/plugin/Tests.java -text
+src/test/resources/logback-test.xml -text
